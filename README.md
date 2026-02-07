@@ -12,7 +12,7 @@ Laboratorio de programación concurrente: condiciones de carrera, sincronizació
 - SO: Windows, macOS o Linux
 
 ---
-### Instacion
+### Instalacion
 
 ---
 
