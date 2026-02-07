@@ -15,6 +15,8 @@ public final class Board {
   private final Set<Position> obstacles = new HashSet<>();
   private final Set<Position> turbo = new HashSet<>();
   private final Map<Position, Position> teleports = new HashMap<>();
+  // Lock para sincronizar el acceso al tablero
+  private final Object boardLock = new Object();
 
   public enum MoveResult { MOVED, ATE_MOUSE, HIT_OBSTACLE, ATE_TURBO, TELEPORTED }
 
@@ -26,40 +28,49 @@ public final class Board {
     for (int i=0;i<4;i++) obstacles.add(randomEmpty());
     for (int i=0;i<3;i++) turbo.add(randomEmpty());
     createTeleportPairs(2);
+    
   }
 
   public int width() { return width; }
   public int height() { return height; }
 
-  public synchronized Set<Position> mice() { return new HashSet<>(mice); }
-  public synchronized Set<Position> obstacles() { return new HashSet<>(obstacles); }
-  public synchronized Set<Position> turbo() { return new HashSet<>(turbo); }
-  public synchronized Map<Position, Position> teleports() { return new HashMap<>(teleports); }
+  public Set<Position> mice() { return new HashSet<>(mice); }
+  public Set<Position> obstacles() { return new HashSet<>(obstacles); }
+  public Set<Position> turbo() { return new HashSet<>(turbo); }
+  public Map<Position, Position> teleports() { return new HashMap<>(teleports); }
 
-  public synchronized MoveResult step(Snake snake) {
+  public MoveResult step(Snake snake) {
     Objects.requireNonNull(snake, "snake");
     var head = snake.head();
     var dir = snake.direction();
     Position next = new Position(head.x() + dir.dx, head.y() + dir.dy).wrap(width, height);
-
-    if (obstacles.contains(next)) return MoveResult.HIT_OBSTACLE;
-
+    boolean ateMouse;
+    boolean ateTurbo;
     boolean teleported = false;
-    if (teleports.containsKey(next)) {
-      next = teleports.get(next);
-      teleported = true;
-    }
+  
 
-    boolean ateMouse = mice.remove(next);
-    boolean ateTurbo = turbo.remove(next);
+    // Sincronizar el acceso a los juegos del hambre 
+    synchronized(boardLock){
+      if (obstacles.contains(next)) return MoveResult.HIT_OBSTACLE;
 
-    snake.advance(next, ateMouse);
+      if (teleports.containsKey(next)) {
+        next = teleports.get(next);
+        teleported = true;
+      }
 
-    if (ateMouse) {
+      ateMouse =mice.remove(next);
+      ateTurbo = turbo.remove(next);
+
+      if (ateMouse) {
       mice.add(randomEmpty());
       obstacles.add(randomEmpty());
       if (ThreadLocalRandom.current().nextDouble() < 0.2) turbo.add(randomEmpty());
+
+      }
+
     }
+
+    snake.advance(next, ateMouse);
 
     if (ateTurbo) return MoveResult.ATE_TURBO;
     if (ateMouse) return MoveResult.ATE_MOUSE;
