@@ -12,6 +12,18 @@ Laboratorio de programación concurrente: condiciones de carrera, sincronizació
 - SO: Windows, macOS o Linux
 
 ---
+### Instacion
+
+---
+
+1. Clone this repository on your local machine:
+   ```bash
+    git clone <URL_DEL_REPOSITORIO>
+    ```
+2. Navigate to the project directory
+    ```bash
+    cd <NOMBRE_DEL_PROYECTO>
+    ```
 
 ## Cómo ejecutar
 
@@ -142,6 +154,9 @@ mvn clean verify
 Incluye compilación y ejecución de pruebas JUnit. Si tienes análisis estático, ejecútalo en `verify` o `site` según tu `pom.xml`.
 
 ---
+## Authors
+
+* **Julian Camilo Lopez Barrero** - [JulianLopez11](https://github.com/JulianLopez11)
 
 ## Créditos
 
