@@ -27,7 +27,16 @@ Laboratorio de programación concurrente: condiciones de carrera, sincronizació
 
 ## Cómo ejecutar
 
+Para PrimePathFinder
 ```bash
+cd PrimePathFinder
+mvn clean verify
+mvn exec:java
+```
+
+Para SnakeRace
+```bash
+cd SnakeRace
 mvn clean verify
 mvn -q -DskipTests exec:java -Dsnakes=4
 ```
