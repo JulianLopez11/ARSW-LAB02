@@ -85,10 +85,16 @@ co.eci.snake
 ### 1) Análisis de concurrencia
 
 - Explica **cómo** el código usa hilos para dar autonomía a cada serpiente.
+
+El codigo usa los hilos asignando un hilo independiente a cada `Snake`en la clase `SnakeRunner` que es donde se da la concurrencia cada instancia de esta decide si cambia de direccion, ajusta su velocidad si es turbo o normal y revisa en la clase `Board` para pedir si puede avanzar o no, y ver el resultado del movimiento
+
 - **Identifica** y documenta en **`el reporte de laboratorio`**:
   - Posibles **condiciones de carrera**.
+  Una posible condicion de carrera es cuando se accede a la clase `Snake` ya que los metodos de esta clase como `advance` o `head` no estan sincronizados, si llega a haber el caso donde se acceda a estos por diferentes hilos pueden tener un impacto en el comportamiento de la serpiente como lecturas inconsistentes de los datos
   - **Colecciones** o estructuras **no seguras** en contexto concurrente.
+  Con lo mencionado anteriormente con la clase `Snake` se tiene que el metodo `snapShot()` no esta sincronizado y este retorna la estructura `ArrayDeque<>` lo que quiero decir que no esta protegido y puede ser no segura dando resultados o comportamientos insesperados. 
   - Ocurrencias de **espera activa** (busy-wait) o de sincronización innecesaria.
+  No existe el uso de busy-wait solo se esta haciendo uso de Thread.sleep() que evita el consumo de recursos
 
 ### 2) Correcciones mínimas y regiones críticas
 
