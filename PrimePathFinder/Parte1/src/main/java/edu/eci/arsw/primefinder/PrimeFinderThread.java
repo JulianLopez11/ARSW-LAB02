@@ -36,26 +36,21 @@ public class PrimeFinderThread extends Thread{
 	}
 
     public void pauseThread(){
-        //Coordinar Threads
         synchronized (pauseLock) {
             isPaused = true;
         }
     }
 
     public void resumeThread(){
-        //Coordinar Threads
         synchronized (pauseLock) {
             isPaused = false;
-            //Notificar a los demas hilillos que la ejecucion ya no esta pausada
             pauseLock.notifyAll();
         }
     }
 
     private void checkPaused() throws InterruptedException {
-        //Coordinar Threads
         synchronized (pauseLock) {
             while (isPaused) {
-                //Mientras los hilillos esten pausados, el hilo actual se bloquea (espera)
                 pauseLock.wait();
             }
         }
