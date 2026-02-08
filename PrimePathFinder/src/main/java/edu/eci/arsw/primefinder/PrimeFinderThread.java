@@ -17,7 +17,6 @@ public class PrimeFinderThread extends Thread{
         this.primes = new LinkedList<>();
 		this.a = a;
 		this.b = b;
-        this.pauseLock = pauseLock;
 	}
 
     @Override
@@ -35,12 +34,14 @@ public class PrimeFinderThread extends Thread{
         }
 	}
 
+    //Lock para pausar el hilo
     public void pauseThread(){
         synchronized (pauseLock) {
             isPaused = true;
         }
     }
-
+    
+    //Lock para reanudar el hilo
     public void resumeThread(){
         synchronized (pauseLock) {
             isPaused = false;
