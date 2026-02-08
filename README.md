@@ -35,7 +35,16 @@ mvn exec:java
 ```
 
 Para SnakeRace
+Para PrimePathFinder
 ```bash
+cd PrimePathFinder
+mvn clean verify
+mvn exec:java
+```
+
+Para SnakeRace
+```bash
+cd SnakeRace
 cd SnakeRace
 mvn clean verify
 mvn -q -DskipTests exec:java -Dsnakes=4
@@ -97,15 +106,25 @@ co.eci.snake
 
 El codigo usa los hilos asignando un hilo independiente a cada `Snake`en la clase `SnakeRunner` que es donde se da la concurrencia cada instancia de esta decide si cambia de direccion, ajusta su velocidad si es turbo o normal y revisa en la clase `Board` para pedir si puede avanzar o no, y ver el resultado del movimiento
 
+
+El codigo usa los hilos asignando un hilo independiente a cada `Snake`en la clase `SnakeRunner` que es donde se da la concurrencia cada instancia de esta decide si cambia de direccion, ajusta su velocidad si es turbo o normal y revisa en la clase `Board` para pedir si puede avanzar o no, y ver el resultado del movimiento
+
 - **Identifica** y documenta en **`el reporte de laboratorio`**:
   - Posibles **condiciones de carrera**.
+
+  Una posible condicion de carrera es cuando se accede a la clase `Snake` ya que los metodos de esta clase como `advance` o `head` no estan sincronizados, si llega a haber el caso donde se acceda a estos por diferentes hilos pueden tener un impacto en el comportamiento de la serpiente como lecturas inconsistentes de los datos
 
   Una posible condicion de carrera es cuando se accede a la clase `Snake` ya que los metodos de esta clase como `advance` o `head` no estan sincronizados, si llega a haber el caso donde se acceda a estos por diferentes hilos pueden tener un impacto en el comportamiento de la serpiente como lecturas inconsistentes de los datos
   - **Colecciones** o estructuras **no seguras** en contexto concurrente.
 
   Con lo mencionado anteriormente con la clase `Snake` se tiene que el metodo `snapShot()` no esta sincronizado y este retorna la estructura `ArrayDeque<>` lo que quiero decir que no esta protegido y puede ser no segura dando resultados o comportamientos insesperados.
   Hay un concepto llamado no thread-safe que indica que un estado interno puede corromperse o volverse inconsistente si varios hilos acceden y modifican datos simultaneamente y hay estructuras Como lo son los `Arraylist` y los `HashSet o Hashmap` que no son seguras y cumplen lo que es este concepto  
+
+  Con lo mencionado anteriormente con la clase `Snake` se tiene que el metodo `snapShot()` no esta sincronizado y este retorna la estructura `ArrayDeque<>` lo que quiero decir que no esta protegido y puede ser no segura dando resultados o comportamientos insesperados.
+  Hay un concepto llamado no thread-safe que indica que un estado interno puede corromperse o volverse inconsistente si varios hilos acceden y modifican datos simultaneamente y hay estructuras Como lo son los `Arraylist` y los `HashSet o Hashmap` que no son seguras y cumplen lo que es este concepto  
   - Ocurrencias de **espera activa** (busy-wait) o de sincronización innecesaria.
+   
+  No existe el uso de busy-wait solo se esta haciendo uso de Thread.sleep() que evita el consumo de recursos
    
   No existe el uso de busy-wait solo se esta haciendo uso de Thread.sleep() que evita el consumo de recursos
 
