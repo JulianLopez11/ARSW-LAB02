@@ -86,7 +86,7 @@ co.eci.snake
 3. La sincronización debe usar **`synchronized`**, **`wait()`**, **`notify()` / `notifyAll()`** sobre el **mismo monitor** (sin _busy-waiting_).
 4. Entrega en el reporte de laboratorio **las observaciones y/o comentarios** explicando tu diseño de sincronización (qué lock, qué condición, cómo evitas _lost wakeups_).
 
-### En el siguiente directorio se puede encontrar la solucion a la primera parte de (Calentamiento) `wait/notify` ⌚
+En el siguiente directorio se puede encontrar la solucion a la primera parte de (Calentamiento) `wait/notify` ⌚
 
 [Solucion PrimePathFinder ](PrimePathFinder/src/main/java/edu/eci/arsw/primefinder/)
 
@@ -95,6 +95,10 @@ co.eci.snake
 ---
 
 ## Parte II — SnakeRace concurrente (núcleo del laboratorio)
+
+En el siguiente directorio se puede encontrar la solucion a la segunda parte SnakeRace
+
+[Solucion SnakeRace ](SnakeRace/src/main/java/co/eci/snake/)
 
 ### 1) Análisis de concurrencia
 
