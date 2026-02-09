@@ -1,5 +1,6 @@
 package co.eci.snake.ui.legacy;
 
+import co.eci.snake.core.GameController;
 import co.eci.snake.concurrency.SnakeRunner;
 import co.eci.snake.core.Board;
 import co.eci.snake.core.Direction;
@@ -10,6 +11,7 @@ import co.eci.snake.core.engine.GameClock;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -20,6 +22,7 @@ public final class SnakeApp extends JFrame {
   private final GamePanel gamePanel;
   private final JButton actionButton;
   private final GameClock clock;
+  private final GameController gameController;
   private final java.util.List<Snake> snakes = new java.util.ArrayList<>();
 
   public SnakeApp() {
@@ -40,18 +43,19 @@ public final class SnakeApp extends JFrame {
     setLayout(new BorderLayout());
     add(gamePanel, BorderLayout.CENTER);
     add(actionButton, BorderLayout.SOUTH);
-
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     pack();
     setLocationRelativeTo(null);
 
     this.clock = new GameClock(60, () -> SwingUtilities.invokeLater(gamePanel::repaint));
-
+    //Iniciar el controlador del juego
+    this.gameController = new GameController(N);
     var exec = Executors.newVirtualThreadPerTaskExecutor();
-    snakes.forEach(s -> exec.submit(new SnakeRunner(s, board)));
-
+    //Añadir gameController para que cada serpiente lo tenga
+    snakes.forEach(s -> exec.submit(new SnakeRunner(s, board, gameController)));
+    //Acciones botones 
     actionButton.addActionListener((ActionEvent e) -> togglePause());
-
+    
     gamePanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("SPACE"), "pause");
     gamePanel.getActionMap().put("pause", new AbstractAction() {
       @Override
@@ -130,13 +134,52 @@ public final class SnakeApp extends JFrame {
 
   private void togglePause() {
     if ("Action".equals(actionButton.getText())) {
-      actionButton.setText("Resume");
-      clock.pause();
+      
+      actionButton.setEnabled(false);
+      gameController.pauseGame();
+      System.out.println("Pausing game, waiting for snakes to pause..." + aliveCount() + " alive snakes.");
+      new Thread(()->{
+
+        gameController.waitAllSnakesPaused();
+        Snake longest = longestAliveSnake();
+        Snake firstDead = firstDeadSnake();
+        SwingUtilities.invokeLater(()->{
+          clock.pause();
+          String msg = String.format("Game Paused.\nLongest Alive: %s\nFirst Dead: %s",
+                    (longest != null ? longest.snapshot().size() : "N/A"),
+                    (firstDead != null ? "Snake Die" : "None yet"));
+          JOptionPane.showMessageDialog(this, msg);
+          actionButton.setEnabled(true);
+          actionButton.setText("Resume");
+        });
+        
+      }).start();;
+
     } else {
       actionButton.setText("Action");
+      gameController.resumeGame();
       clock.resume();
     }
   }
+
+  //Obtener la sssserpiente viva mas grande
+  private Snake longestAliveSnake() {
+    return snakes.stream()
+        .filter(s-> s.aliveSize() >= 0)
+        .max(Comparator.comparingInt(Snake::aliveSize))
+        .orElse(null);
+  }
+  //Primera muerta
+  private Snake firstDeadSnake() {
+    return snakes.stream()
+        .filter(s -> !s.isAlive())
+        .min(Comparator.comparingLong(Snake::getDeathTime))
+        .orElse(null);
+  }
+
+  private long aliveCount() {
+    return snakes.stream().filter(Snake::isAlive).count();
+ }
 
   public static final class GamePanel extends JPanel {
     private final Board board;
@@ -213,6 +256,11 @@ public final class SnakeApp extends JFrame {
       var snakes = snakesSupplier.get();
       int idx = 0;
       for (Snake s : snakes) {
+        //Desaparece si se choca? Osea se muere 
+        if (!s.isAlive()) {
+          idx++;
+          continue;
+        }     
         var body = s.snapshot().toArray(new Position[0]);
         for (int i = 0; i < body.length; i++) {
           var p = body[i];

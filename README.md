@@ -86,6 +86,10 @@ co.eci.snake
 3. La sincronización debe usar **`synchronized`**, **`wait()`**, **`notify()` / `notifyAll()`** sobre el **mismo monitor** (sin _busy-waiting_).
 4. Entrega en el reporte de laboratorio **las observaciones y/o comentarios** explicando tu diseño de sincronización (qué lock, qué condición, cómo evitas _lost wakeups_).
 
+### En el siguiente directorio se puede encontrar la solucion a la primera parte de (Calentamiento) `wait/notify` ⌚
+
+[Solucion PrimePathFinder ](PrimePathFinder/src/main/java/edu/eci/arsw/primefinder/)
+
 > Objetivo didáctico: practicar suspensión/continuación **sin** espera activa y consolidar el modelo de monitores en Java.
 
 ---
@@ -154,6 +158,21 @@ public Map<Position, Position> teleports() { return new HashMap<>(teleports); }
   - La **serpiente viva más larga**.
   - La **peor serpiente** (la que **primero murió**).
 - Considera que la suspensión **no es instantánea**; coordina para que el estado mostrado no quede “a medias”.
+- El juego inicia 
+
+ ![Inicio Juego](docs/img/image.png)
+
+- Luego tras oprimir el boton action se puede observar si alguna serpiente murio y la longitud de la serpiente mas larga
+
+ ![Pausa Juego](docs/img/image-1.png)
+
+- El estado del boton cambia a "Resume"
+
+ ![Resume](docs/img/image-2.png)
+
+- Volvemos a jugar
+
+![alt text](docs/img/image-3.png)
 
 ### 4) Robustez bajo carga
 
@@ -162,28 +181,6 @@ public Map<Position, Position> teleports() { return new HashMap<>(teleports); }
 - Si habilitas **teleports** y **turbo**, verifica que las reglas no introduzcan carreras.
 
 > Entregables detallados más abajo.
-
----
-
-## Entregables
-
-1. **Código fuente** funcionando en **Java 21**.
-2. Todo de manera clara en **`**el reporte de laboratorio**`** con:
-   - Data races encontradas y su solución.
-   - Colecciones mal usadas y cómo se protegieron (o sustituyeron).
-   - Esperas activas eliminadas y mecanismo utilizado.
-   - Regiones críticas definidas y justificación de su **alcance mínimo**.
-3. UI con **Iniciar / Pausar / Reanudar** y estadísticas solicitadas al pausar.
-
----
-
-## Criterios de evaluación (10)
-
-- (3) **Concurrencia correcta**: sin data races; sincronización bien localizada.
-- (2) **Pausa/Reanudar**: consistencia visual y de estado.
-- (2) **Robustez**: corre **con N alto** y sin excepciones de concurrencia.
-- (1.5) **Calidad**: estructura clara, nombres, comentarios; sin _code smells_ obvios.
-- (1.5) **Documentación**: **`reporte de laboratorio`** claro, reproducible;
 
 ---
 
