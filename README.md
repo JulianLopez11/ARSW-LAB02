@@ -90,6 +90,46 @@ En el siguiente directorio se puede encontrar la solucion a la primera parte de 
 
 [Solucion PrimePathFinder ](PrimePathFinder/src/main/java/edu/eci/arsw/primefinder/)
 
+```java
+@Override
+	public void run(){
+        try {
+            for (int i= a;i < b;i++){	
+                checkPaused();					
+                if (isPrime(i)){
+                    primes.add(i);
+                    System.out.println(i);
+                }
+            }
+        }catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+	}
+
+    //Lock para pausar el hilo
+    public void pauseThread(){
+        synchronized (pauseLock) {
+            isPaused = true;
+        }
+    }
+    
+    //Lock para reanudar el hilo
+    public void resumeThread(){
+        synchronized (pauseLock) {
+            isPaused = false;
+            pauseLock.notifyAll();
+        }
+    }
+
+    private void checkPaused() throws InterruptedException {
+        synchronized (pauseLock) {
+            while (isPaused) {
+                pauseLock.wait();
+            }
+        }
+    }
+```
+
 > Objetivo didáctico: practicar suspensión/continuación **sin** espera activa y consolidar el modelo de monitores en Java.
 
 ---
@@ -162,21 +202,38 @@ public Map<Position, Position> teleports() { return new HashMap<>(teleports); }
   - La **serpiente viva más larga**.
   - La **peor serpiente** (la que **primero murió**).
 - Considera que la suspensión **no es instantánea**; coordina para que el estado mostrado no quede “a medias”.
+
+Flujo Implementando solo contar tamaño serpiente mas larga
+- El juego inicia
+
+![alt text](image-2.png)
+---
+- Se pausa y se informa al usuario sobre la serpiente mas grande
+
+![alt text](image.png)
+---
+- Reanudar el juego
+
+![alt text](image-1.png)
+---
+Flujo Implementando logica de si la serpiente muere (Rama feature/snakeRace)
+
 - El juego inicia 
 
  ![Inicio Juego](docs/img/image.png)
-
+---
 - Luego tras oprimir el boton action se puede observar si alguna serpiente murio y la longitud de la serpiente mas larga
 
  ![Pausa Juego](docs/img/image-1.png)
-
+---
 - El estado del boton cambia a "Resume"
 
  ![Resume](docs/img/image-2.png)
-
+---
 - Volvemos a jugar
 
 ![alt text](docs/img/image-3.png)
+---
 
 ### 4) Robustez bajo carga
 

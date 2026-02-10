@@ -8,6 +8,7 @@ co\eci\snake\ui\legacy\SnakeApp$6.class
 co\eci\snake\ui\legacy\SnakeApp.class
 co\eci\snake\ui\legacy\SnakeApp$1.class
 co\eci\snake\concurrency\SnakeRunner.class
+co\eci\snake\core\GameController.class
 co\eci\snake\core\Position.class
 co\eci\snake\ui\legacy\SnakeApp$2.class
 co\eci\snake\core\Direction.class

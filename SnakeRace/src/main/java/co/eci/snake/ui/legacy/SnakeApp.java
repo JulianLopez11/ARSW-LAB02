@@ -142,12 +142,10 @@ public final class SnakeApp extends JFrame {
 
         gameController.waitAllSnakesPaused();
         Snake longest = longestAliveSnake();
-        Snake firstDead = firstDeadSnake();
         SwingUtilities.invokeLater(()->{
           clock.pause();
-          String msg = String.format("Game Paused.\nLongest Alive: %s\nFirst Dead: %s",
-                    (longest != null ? longest.snapshot().size() : "N/A"),
-                    (firstDead != null ? "Snake Die" : "None yet"));
+          String msg = String.format("Game Paused.\nLongest Alive: %s",
+                    (longest != null ? longest.snapshot().size() : "N/A"));
           JOptionPane.showMessageDialog(this, msg);
           actionButton.setEnabled(true);
           actionButton.setText("Resume");
@@ -167,13 +165,6 @@ public final class SnakeApp extends JFrame {
     return snakes.stream()
         .filter(s-> s.aliveSize() >= 0)
         .max(Comparator.comparingInt(Snake::aliveSize))
-        .orElse(null);
-  }
-  //Primera muerta
-  private Snake firstDeadSnake() {
-    return snakes.stream()
-        .filter(s -> !s.isAlive())
-        .min(Comparator.comparingLong(Snake::getDeathTime))
         .orElse(null);
   }
 
@@ -255,12 +246,7 @@ public final class SnakeApp extends JFrame {
       // Serpientes
       var snakes = snakesSupplier.get();
       int idx = 0;
-      for (Snake s : snakes) {
-        //Desaparece si se choca? Osea se muere 
-        if (!s.isAlive()) {
-          idx++;
-          continue;
-        }     
+      for (Snake s : snakes) {    
         var body = s.snapshot().toArray(new Position[0]);
         for (int i = 0; i < body.length; i++) {
           var p = body[i];

@@ -40,17 +40,6 @@ public final class Snake {
     return isAlive() ? body.size() : -1;
   }
 
-
-  public synchronized void snakeDie() {
-    if (deathTimestamp == -1) {
-        deathTimestamp = System.currentTimeMillis();
-    }
-  }
-
-  public synchronized long getDeathTime() {
-      return deathTimestamp;
-  }
-
   public Deque<Position> snapshot() { return new ArrayDeque<>(body); }
 
   public void advance(Position newHead, boolean grow) {

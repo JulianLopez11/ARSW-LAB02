@@ -52,7 +52,6 @@ public final class Board {
     // Sincronizar el acceso a los juegos del hambre 
     synchronized(boardLock){
       if (obstacles.contains(next)){
-        snake.snakeDie();
         return MoveResult.HIT_OBSTACLE;
       } 
 
