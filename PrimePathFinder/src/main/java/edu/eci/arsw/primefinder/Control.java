@@ -5,6 +5,8 @@
  */
 package edu.eci.arsw.primefinder;
 
+import java.util.Scanner;
+
 /**
  *
  */
