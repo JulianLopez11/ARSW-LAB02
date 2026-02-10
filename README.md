@@ -37,7 +37,6 @@ mvn exec:java
 Para SnakeRace
 ```bash
 cd SnakeRace
-cd SnakeRace
 mvn clean verify
 mvn -q -DskipTests exec:java -Dsnakes=4
 ```
@@ -151,12 +150,12 @@ El codigo usa los hilos asignando un hilo independiente a cada `Snake`en la clas
 
   Una posible condicion de carrera es cuando se accede a la clase `Snake` ya que los metodos de esta clase como `advance` o `head` no estan sincronizados, si llega a haber el caso donde se acceda a estos por diferentes hilos pueden tener un impacto en el comportamiento de la serpiente como lecturas inconsistentes de los datos
 
-  Con lo mencionado anteriormente con la clase `Snake` se tiene que el metodo `snapShot()` no esta sincronizado y este retorna la estructura `ArrayDeque<>` lo que quiero decir que no esta protegido y puede ser no segura dando resultados o comportamientos insesperados.
+  Con lo mencionado anteriormente con la clase `Snake` se tiene que el metodo `snapShot()` no esta sincronizado y este retorna la estructura `ArrayDeque<>` lo que quiere decir que no esta protegido y puede ser no segura dando resultados o comportamientos insesperados.
   Hay un concepto llamado no thread-safe que indica que un estado interno puede corromperse o volverse inconsistente si varios hilos acceden y modifican datos simultaneamente y hay estructuras Como lo son los `Arraylist` y los `HashSet o Hashmap` que no son seguras y cumplen lo que es este concepto  
 
   - Ocurrencias de **espera activa** (busy-wait) o de sincronización innecesaria.
    
-  No existe el uso de busy-wait solo se esta haciendo uso de Thread.sleep() que evita el consumo de recursos
+  No existe el uso de busy-wait solo se esta haciendo uso de Thread.sleep() que evita el consumo de recursos y puede ser mas optimo.
    
 ### 2) Correcciones mínimas y regiones críticas
 
@@ -164,7 +163,7 @@ El codigo usa los hilos asignando un hilo independiente a cada `Snake`en la clas
 - Protege **solo** las **regiones críticas estrictamente necesarias** (evita bloqueos amplios).
 
 En la versión inicial del código, el acceso al estado del tablero se realizaba sin una delimitación clara de la región crítica o mediante bloqueos demasiado amplios, lo que podía generar condiciones de carrera sobre estructuras no thread-safe concepto que explique anteriormente con los HashSet. Esto representaba un riesgo tanto de inconsistencias en el estado del juego como de pérdida de paralelismo.
-Entonces e delimito la region critica implementando un `lock` del sistema principal sincronizando las operaciones a las cuales se acceden y modifican el estado del tablero como los teleports o el turbo. Asi lo que se hace es eliminar bloqueos innecesarios.
+Entonces se delimito la region critica implementando un `lock` del sistema principal sincronizando las operaciones a las cuales se acceden y modifican el estado del tablero como los teleports o el turbo. Asi lo que se hace es eliminar bloqueos innecesarios.
 
 ```java
 synchronized(boardLock){
@@ -187,7 +186,7 @@ synchronized(boardLock){
 
     }
 ``` 
-Adicionalmente, los métodos de acceso evitan la exposición directa de las colecciones compartidas y reduciendo el riesgo de modificaciones concurrentes no controladas.
+Adicionalmente, los métodos de acceso evitan la exposición directa de las colecciones compartidas y reducen el riesgo de modificaciones concurrentes que no serán controladas luego del cambio se ven asi:
 
 ```java
 public Set<Position> mice() { return new HashSet<>(mice); }
