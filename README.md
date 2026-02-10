@@ -203,7 +203,7 @@ public Map<Position, Position> teleports() { return new HashMap<>(teleports); }
   - La **peor serpiente** (la que **primero murió**).
 - Considera que la suspensión **no es instantánea**; coordina para que el estado mostrado no quede “a medias”.
 
-#### Flujo Implementando solo contar tamaño serpiente mas larga
+### Flujo Implementando solo contar tamaño serpiente mas larga
 - El juego inicia
 
 ![alt text](docs/img/image-4.png)
@@ -216,7 +216,7 @@ public Map<Position, Position> teleports() { return new HashMap<>(teleports); }
 
 ![alt text](docs/img/image-6.png)
 ---
-#### Flujo Implementando logica de si la serpiente muere (Rama feature/snakeRace)
+### Flujo Implementando logica de si la serpiente muere tras tocar un muro (Rama feature/snakeRace)
 
 - El juego inicia 
 
